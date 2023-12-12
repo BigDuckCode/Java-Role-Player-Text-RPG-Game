@@ -1,0 +1,664 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+
+    // \033[H\033[2J print this to clear console
+
+    //Determines health based on class
+    public static int pHealth(String origin)
+    {
+        int health = 0;
+        String job = origin;
+        if (job.equals("Knight"))
+        {
+            health = 100;
+        }
+        else if (job.equals("Thief"))
+        {
+            health = 50;
+        }
+        else if (job.equals("Beggar"))
+        {
+            health = 75;
+        }
+        return(health);
+    }
+
+    //Determins damage based on class
+    public static int pAttack(String origin)
+    {
+        int attack = 0;
+        String job = origin;
+        if (job.equals("Knight"))
+        {
+            attack = 30;
+        }
+        else if (job.equals("Thief"))
+        {
+            attack = 50;
+        }
+        else if (job.equals("Beggar"))
+        {
+            attack = 40;
+        }
+        return(attack);
+    }
+
+    public static void graphics(String origin)
+    {
+        String job = origin;
+        if (job.equals("Knight"))
+        {
+            System.out.println("  __________");
+            System.out.println(" /     ==   |");
+            System.out.println("|      ||   |");
+            System.out.println("|      ||   |");
+            System.out.println("| _____||___|");
+            System.out.println("| |____||___|");
+            System.out.println("|     \\||/  |");
+            System.out.println("| * * *||   |");
+            System.out.println("|  * * || + |");
+            System.out.println("| * * *||   |");
+            System.out.println(" \\_____||___|");
+        }
+        else if (job.equals("Thief"))
+        {
+            System.out.println("       #    ");
+            System.out.println("     ####   ");
+            System.out.println("  ######### ");
+            System.out.println(" ###### ####");
+            System.out.println("#### _   _ #");
+            System.out.println("##  |O| |O|#");
+            System.out.println("############");
+            System.out.println("  ##########");
+            System.out.println("   #########");
+            System.out.println("     ###### ");
+            System.out.println("      ####  ");
+        }
+        else if (job.equals("Beggar"))
+        {
+            System.out.println("   _______  ");
+            System.out.println("  /       \\ ");
+            System.out.println(" |    _   _|");
+            System.out.println(" |   |O| |O|");
+            System.out.println(" |         |");
+            System.out.println(" ###  #####|");
+            System.out.println(" ####  ___ #");
+            System.out.println("  ####/ | \\#");
+            System.out.println("   ######## ");
+            System.out.println("    ######  ");
+            System.out.println("      ###   ");
+        }
+
+    }
+
+
+
+
+    //Creates the character description
+    public static String characterDescription(String job, String start, String llama)
+    {
+        String nombre = llama;
+        String origin = job;
+        String quest = start;
+        String place = "";
+        String description = "";
+        //creates the combo of origin and quest for the character
+        if (quest.equals("BT"))
+        {
+            place = "Blightown. \nA town once prosperous, now plagued with an endless rain that washed \naway all life in its region. All that remains is a swamp filled with \nall manner of bog monster which spawn infinitely from the muddied water.";
+        }
+        else if (quest.equals("LC"))
+        {
+            place = "the Lich's Castle. \nThe rival to our very own lands used to be another king who at the \nleast worshipped one of the divine lords. That was until his court \nwizard was charged with practicing necromancy. The wizard was hanged \nat the center of the town, but, unbeknownst to the king he had cast a \nspell turning every living thing in the castle into a skeletal thrall under \nhis control. Now he sits in the tallest tower resurrected from the grave plotting \nto take over our lands next.";
+        }
+        else if (quest.equals("SPT"))
+        {
+            place = "the suspiciously peaceful town. \nThis town lying only a days journey from the castle was thought \nto be blessed by the goddess as it had never been besiged by the \nforces of evil. That was until strange rumors spread of merchants and \npilgrimaging villagers dissapearinging near the settlement. The king \nsuspects that a cult to the dark lord has rooted itself in the town.";
+        }
+
+
+        //creates the description of the adventure
+        if (origin.equals("Knight"))
+        {
+            description = (nombre + ", a chivalrous knight raised under the guidance of your local lord. You have \nbeen tasked by the king to venture forth towards " + place + " \n\nThe king has demanded you venture there and slay the evil that lurks in that area.");
+        }
+        else if (origin.equals("Thief"))
+        {
+            description = (nombre + ", a cunning rogue and thief hailing from the slums of the main castle. \nYou were caught attempting to steal from the kings very own royal chamber. \nNow faced with execution the king offers you a deal. \nVenture forth towards " + place + " \n\nIf you can quell the evil that lurks there you will be granted pardon and the \ntitle of lord upon return.");
+        }
+        else if (origin.equals("Beggar"))
+        {
+            description = (nombre + ", a beggar roaming the streets of the castle you found arrive to a speech \nbeing given by the king. He says that any adventurer who can complete his \nquest will recive a small fortune and a mansion upon return. \nYou quickly venture to the area designated by the king however, \nunbeknownst to you, you travel towards " + place + " \n\nCan you overcome your poverty or will you die trying to slay the great evil");
+        }
+        //returns description
+        return description;
+    }
+
+    //creates a pause between text to slow things down
+    public static void sleep(int num) {
+        try {
+            Thread.sleep(num);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+
+        // System objects
+        Scanner in = new Scanner(System.in);
+        Random rand = new Random();
+
+        // Game Variables
+        String[] enemiesBT = { "Florida Panther", "Swamp Thing", "Bog Monster", "Evil Swamp Frog" };
+        String[] enemiesLC = { "Skeleton", "Rotten Mage", "Zombie", "Undead Horse" };
+        String[] enemiesSPT = { "Cultist", "Thrall", "Vampire", "Vampire Fledgling" };
+        String[] moves = {"Attack", "Parry", "Recover"};
+        String enemy = "";
+        int enemyHealth = 50;
+        int enemyMaxHealth = 0;
+        int level = 1;
+        boolean living = true;
+        String enemyMove = "";
+
+        // Player Variables 1
+        String origin = "";
+        String quest = "";
+        String name = "";
+
+        // Player variables 2
+        int health = 0;
+        int attack = 0;
+        boolean dead = false;
+
+        boolean running = true;
+
+///////////////////////////////     INTRO    /////////////////////////////////////////////
+        System.out.println("              |");
+        sleep(100);
+        System.out.println("              |");
+        sleep(100);
+        System.out.println("             ,|.");
+        sleep(100);
+        System.out.println("            ,\\|/.");
+        sleep(100);
+        System.out.println("          ,' .V. `.");
+        sleep(100);
+        System.out.println("         / .     . \\");
+        sleep(100);
+        System.out.println("        /_`       '_\\");
+        sleep(100);
+        System.out.println("       ,' .:     ;, `.");
+        sleep(100);
+        System.out.println("       |@)|  . .  |(@|");
+        sleep(100);
+        System.out.println("  ,-._ `._';  .  :`_,' _,-.");
+        sleep(100);
+        System.out.println(" '--  `-\\ /,-===-.\\ /-'  --`");
+        sleep(100);
+        System.out.println("(----  _|  ||___||  |_  ----)");
+        sleep(100);
+        System.out.println(" `._,-'  \\  `-.-'  /  `-._,'");
+        sleep(100);
+        System.out.println("          `-.___,-' ");
+        sleep(100);
+        System.out.println("");
+        System.out.println("  Brought to you by the Fish");
+        sleep(3000);
+        System.out.println("\033[H\033[2J");
+        System.out.println("You will now create your starting character");
+        sleep(3000);
+        System.out.println("\033[H\033[2J");
+        System.out.println("Pick your characters origin");
+        System.out.println("____________________________________________");
+        System.out.println("\t1. Knight");
+        System.out.println("\t2. Thief");
+        System.out.println("\t3. Beggar");
+
+        //choose player class
+        while(true){
+            String originTemp = in.nextLine();
+            if (originTemp.equals("1")) 
+            {
+                origin = "Knight";
+                break;
+            }
+            else if (originTemp.equals("2")) 
+            {
+                origin = "Thief";
+                break;
+            }
+            else if (originTemp.equals("3")) 
+            {
+                origin = "Beggar";
+                break;
+            }
+        }
+
+
+        sleep(200);
+        System.out.println("\033[H\033[2J");
+        System.out.println("Pick your characters Quest");
+        System.out.println("____________________________________________");
+        System.out.println("\t1. Blight Town");
+        System.out.println("\t2. Lich's Castle");
+        System.out.println("\t3. Suspicously Peaceful Town");
+
+        //choose player start
+        while(true){
+            String questTemp = in.nextLine();
+            if (questTemp.equals("1")) 
+            {
+                quest = "BT";
+                break;
+            }
+            else if (questTemp.equals("2")) 
+            {
+                quest = "LC";
+                break;
+            }
+            else if (questTemp.equals("3")) 
+            {
+                quest = "SPT";
+                break;
+            }
+        }
+        // Chooses Name
+        sleep(200);
+        System.out.println("\033[H\033[2J");
+        System.out.println("What is your creations name?");
+        System.out.println("____________________________________________");
+        name = in.nextLine();
+
+        // Prints adventure
+        sleep(500);
+        System.out.println("\033[H\033[2J");
+        System.out.println(characterDescription(origin, quest, name));
+        System.out.println("");
+        System.out.println("Press enter to begin your adventure.");
+        String begin = in.nextLine();
+        sleep(500);
+        System.out.println("\033[H\033[2J");
+        health = pHealth(origin);
+        int maxHealth = pHealth(origin);
+        attack = pAttack(origin);
+
+
+
+///////////////////////////////     INTRO END    /////////////////////////////////////////////
+
+///////////////////////////////     GAME    /////////////////////////////////////////////
+        GAME:
+        while(running) {
+            enemyHealth = (50 + (level * rand.nextInt(10)));
+            enemyMaxHealth = enemyHealth;
+            int enemyAttack = (5 + rand.nextInt(10));
+            if (quest.equals("BT")) 
+            {
+                enemy = enemiesBT[rand.nextInt(enemiesBT.length)];
+                System.out.println("\tA " + enemy + " stands in your way!");
+                sleep(2000);
+                System.out.println("\033[H\033[2J");
+            }
+            else if (quest.equals("LC")) 
+            {
+                enemy = enemiesLC[rand.nextInt(enemiesLC.length)];
+                System.out.println("\tA " + enemy + " stands in your way!");
+                sleep(2000);
+                System.out.println("\033[H\033[2J");
+            }
+            else if (quest.equals("SPT")) 
+            {
+                enemy = enemiesSPT[rand.nextInt(enemiesSPT.length)];
+                System.out.println("\tA " + enemy + " stands in your way!");
+                sleep(2000);
+                System.out.println("\033[H\033[2J");
+            }
+            living = true;
+            while(living) {
+                System.out.println("\033[H\033[2J");
+                System.out.println("=============");
+                System.out.println(name);
+                graphics(origin);
+                System.out.println("=============");
+                System.out.println("Your HP: " + health);
+                System.out.println("=======================================");
+                System.out.println("");
+                System.out.println(enemy + " has " + enemyHealth + " HP remaining.");
+                System.out.println("");
+                System.out.println("=======================================");
+                //Rock Paper Scissers type of combat   //Attack beats Recover, Recover beats Parry, Parry beats Attack
+                System.out.println("\t1. Attack");
+                System.out.println("\t2. Parry");
+                System.out.println("\t3. Recover");
+                enemyMove = moves[rand.nextInt(moves.length)];
+                String input = in.nextLine();
+                System.out.println("\033[H\033[2J");
+                if (input.equals("1")) 
+                {
+                    if (enemyMove.equals("Attack"))
+                    {
+                        //Deal Damage
+                        enemyHealth -= attack;
+                        //Take Damage
+                        health -= enemyAttack;
+                        System.out.println("Both combatants attack each other drawing blood. " + name + " takes \n" + enemyAttack + " damage. " + enemy + " takes " + attack + " damage.");
+                    }
+                    else if (enemyMove.equals("Parry"))
+                    {
+                        //Take Damage
+                        health -= enemyAttack;
+                        System.out.println(name + " tries to attack the " + enemy + " but they are parried and riposted. \n" + name + " takes " + enemyAttack + " damage.");
+                    }
+                    else if (enemyMove.equals("Recover"))
+                    {
+                        //Deal Damage
+                        enemyHealth -= attack * 2;
+                        System.out.println("The " + enemy + " tries to recover but you attack him in his vulnerability \ndealing critical damage. " + enemy + " takes " + (attack * 2) + " damage.");
+                    }
+                }
+                else if (input.equals("2")) 
+                {
+                    if (enemyMove.equals("Attack"))
+                    {
+                        //Deal Damage
+                        enemyHealth -= attack;
+                        System.out.println("The " + enemy + " attacks you but you parry his move dealing critical \ndamage. " + enemy + " takes " + (attack * 2) + " damage.");
+                    }
+                    else if (enemyMove.equals("Parry"))
+                    {
+                        //Stalemate
+                        System.out.println("Both combatants stare each other down, neither making an attack");
+                    }
+                    else if (enemyMove.equals("Recover"))
+                    {
+                        //enemy Heal
+                        enemyHealth += 10;
+                        if (enemyMaxHealth <= enemyHealth) 
+                        {
+                            enemyHealth = enemyMaxHealth;
+                        }
+                        System.out.println(name + " stands guard ready to counter the " + enemy + "\'s attack. \nThe " + enemy + " catches its breath while you wait for an attack that wont come. \n" + enemy + " recovers 10 health.");
+                    }
+                }
+                else if (input.equals("3")) 
+                {
+                    if (enemyMove.equals("Attack"))
+                    {
+                        //Take Damage
+                        health -= enemyAttack;
+                        System.out.println(name + " tries to rest but the " + enemy + " attacks you dealing \n" + enemyAttack + " damage.");
+                    }
+                    else if (enemyMove.equals("Parry"))
+                    {
+                        //Heal
+                        health += 20;
+                        if (maxHealth <= health) 
+                        {
+                            health = maxHealth;
+                        }
+                        System.out.print("The " + enemy + " waits for an attack but " + name + " uses this \nchance to rest. " + name + " recovers 20 HP. ");
+                    }
+                    else if (enemyMove.equals("Recover"))
+                    {
+                        //enemy Heal
+                        enemyHealth += 10;
+                        if (enemyMaxHealth <= enemyHealth) 
+                        {
+                            enemyHealth = enemyMaxHealth;
+                        }
+                        //Heal
+                        health += 20;
+                        if (maxHealth <= health) 
+                        {
+                            health = maxHealth;
+                        }
+                        System.out.println("Both combatants take a breather from the exaustions of battle, \nneither losing their guard. " + name + " recovers 20 HP. \n" + enemy + " gains 10 HP.");
+                    }
+                }
+                else 
+                {
+                    System.out.println("********************************************");
+                    System.out.println("\tINVALID COMMAND");
+                    System.out.println("********************************************");
+                }
+                sleep(3500);
+                System.out.println("\033[H\033[2J");
+
+                if (health <= 0){
+                    System.out.println("You were slain while trying to achieve greatness!");
+                    sleep(3000);
+                    running = false;
+                    living = false;
+                    dead = true;
+                }
+
+                if (enemyHealth <= 0){
+                    living = false;
+                }
+            }
+
+
+            level += 1;
+            if (level == 6) {
+                running = false;
+            }
+        }
+        if (dead == false)
+        {
+            System.out.println("\033[H\033[2J");
+            sleep(3000);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(500);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(450);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(400);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(350);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(300);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(250);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(200);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(150);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(100);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(100);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(100);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(100);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(100);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(100);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(100);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(100);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(50);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(25);
+            System.out.println("A GREAT EVIL APPROACHES");
+            sleep(3000);
+            System.out.println("\033[H\033[2J");
+            System.out.println("You underestimated the enemies true evil.");
+            sleep(3000);
+            System.out.println("\033[H\033[2J");
+            System.out.println("Your Health is MAX.");
+            sleep(2000);
+            double health2 = 1000000.0;
+            double entityHealth = 666;
+            boolean entity = true;
+            while(entity)
+            {
+                System.out.println("⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀    ⡄    ");
+                System.out.println("⢻⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠤⠤⠴⢶⣶⡶⠶⠤⠤⢤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣾⠁    ");
+                System.out.println("⠀⠻⣯⡗⢶⣶⣶⣶⣶⢶⣤⣄⣀⣀⡤⠒⠋⠁⠀⠀⠀⠀⠚⢯⠟⠂⠀⠀⠀⠀⠉⠙⠲⣤⣠⡴⠖⣲⣶⡶⣶⣿⡟⢩⡴⠃⠀ ");
+                System.out.println("⠀⠀⠈⠻⠾⣿⣿⣬⣿⣾⡏⢹⣏⠉⠢⣄⣀⣀⠤⠔⠒⠊⠉⠉⠉⠉⠑⠒⠀⠤⣀⡠⠚⠉⣹⣧⣝⣿⣿⣷⠿⠿⠛⠉⠀⠀ ");
+                System.out.println("⠀⠀⠀⠀⠀⠀⠀⠈⣹⠟⠛⠿⣿⣤⡀⣸⠿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠾⣇⢰⣶⣿⠟⠋⠉⠳⡄⠀⠀⠀⠀⠀⠀⠀    ");
+                System.out.println("⠀⠀⠀⠀⠀⠀⢠⡞⠁⠀⠀⡠⢾⣿⣿⣯⠀⠈⢧⡀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠁⢀⣿⣿⣯⢼⠓⢄⠀⢀⡘⣦⡀⠀⠀⠀⠀⠀   ");
+                System.out.println("⠀⠀⠀⠀⠀⣰⣟⣟⣿⣀⠎⠀⠀⢳⠘⣿⣷⡀⢸⣿⣶⣤⣄⣀⣤⢤⣶⣿⡇⢀⣾⣿⠋⢀⡎⠀⠀⠱⣤⢿⠿⢷⡀⠀⠀⠀⠀ ");
+                System.out.println("⠀⠀⠀⠀⣰⠋⠀⠘⣡⠃⠀⠀⠀⠈⢇⢹⣿⣿⡾⣿⣻⣖⠛⠉⠁⣠⠏⣿⡿⣿⣿⡏⠀⡼⠀⠀⠀⠀⠘⢆⠀⠀⢹⡄⠀⠀⠀  ");
+                System.out.println("⠀⠀⠀⢰⠇⠀⠀⣰⠃⠀⠀⣀⣀⣀⣼⢿⣿⡏⡰⠋⠉⢻⠳⣤⠞⡟⠀⠈⢣⡘⣿⡿⠶⡧⠤⠄⣀⣀⠀⠈⢆⠀⠀⢳⠀⠀⠀ ");
+                System.out.println("⠀⠀⠀⡟⠀⠀⢠⣧⣴⣊⣩⢔⣠⠞⢁⣾⡿⢹⣷⠋⠀⣸⡞⠉⢹⣧⡀⠐⢃⢡⢹⣿⣆⠈⠢⣔⣦⣬⣽⣶⣼⣄⠀⠈⣇⠀⠀");
+                System.out.println("⠀⠀⢸⠃⠀⠘⡿⢿⣿⣿⣿⣛⣳⣶⣿⡟⣵⠸⣿⢠⡾⠥⢿⡤⣼⠶⠿⡶⢺⡟⣸⢹⣿⣿⣾⣯⢭⣽⣿⠿⠛⠏⠀⠀⢹⠀⠀");
+                System.out.println("⠀⠀⢸⠀⠀⠀⡇⠀⠈⠙⠻⠿⣿⣿⣿⣇⣸⣧⣿⣦⡀⠀⣘⣷⠇⠀⠄⣠⣾⣿⣯⣜⣿⣿⡿⠿⠛⠉⠀⠀⠀⢸⠀⠀⢸⡆⠀ ");
+                System.out.println("⠀⠀⢸⠀⠀⠀⡇⠀⠀⠀⠀⣀⠼⠋⢹⣿⣿⣿⡿⣿⣿⣧⡴⠛⠀⢴⣿⢿⡟⣿⣿⣿⣿⠀⠙⠲⢤⡀⠀⠀⠀⢸⡀⠀⢸⡇⠀ ");
+                System.out.println("⠀⠀⢸⣀⣷⣾⣇⠀⣠⠴⠋⠁⠀⠀⣿⣿⡛⣿⡇⢻⡿⢟⠁⠀⠀⢸⠿⣼⡃⣿⣿⣿⡿⣇⣀⣀⣀⣉⣓⣦⣀⣸⣿⣿⣼⠁⠀");
+                System.out.println("⠀⠀⠸⡏⠙⠁⢹⠋⠉⠉⠉⠉⠉⠙⢿⣿⣅⠀⢿⡿⠦⠀⠁⠀⢰⡃⠰⠺⣿⠏⢀⣽⣿⡟⠉⠉⠉⠀⠈⠁⢈⡇⠈⠇⣼⠀⠀");
+                System.out.println("⠀⠀⠀⢳⠀⠀⠀⢧⠀⠀⠀⠀⠀⠀⠈⢿⣿⣷⣌⠧⡀⢲⠄⠀⠀⢴⠃⢠⢋⣴⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⡸⠀⠀⢠⠇⠀⠀   ");
+                System.out.println("⠀⠀⠀⠈⢧⠀⠀⠈⢦⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⣧⠐⠸⡄⢠⠀⢸⠀⢠⣿⣟⡿⠋⠀⠀⠀⠀⠀⠀⠀⡰⠁⠀⢀⡟⠀⠀⠀   ");
+                System.out.println("⠀⠀⠀⠀⠈⢧⠀⠀⠀⠣⡀⠀⠀⠀⠀⠀⠀⠈⠛⢿⡇⢰⠁⠸⠄⢸⠀⣾⠟⠉⠀⠀⠀⠀⠀⠀⠀⢀⠜⠁⠀⢀⡞⠀⠀⠀⠀   ");
+                System.out.println("⠀⠀⠀⠀⠀⠈⢧⡀⠀⠀⠙⢄⠀⠀⠀⠀⠀⠀⠀⢨⡷⣜⠀⠀⠀⠘⣆⢻⠀⠀⠀⠀⠀⠀⠀⠀⡴⠋⠀⠀⣠⠎⠀⠀⠀⠀⠀    ");
+                System.out.println("⠀⠀⠀⠀⠀⠀⠀⠑⢄⠀⠀⠀⠑⠦⣀⠀⠀⠀⠀⠈⣷⣿⣦⣤⣤⣾⣿⢾⠀⠀⠀⠀⠀⣀⠴⠋⠀⠀⢀⡴⠃⠀⠀⠀⠀⠀⠀   ");
+                System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⢄⡀⢸⣶⣿⡑⠂⠤⣀⡀⠱⣉⠻⣏⣹⠛⣡⠏⢀⣀⠤⠔⢺⡧⣆⠀⢀⡴⠋⠀⠀⠀⠀⠀⠀⠀⠀ ");
+                System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠳⢽⡁⠀⠀⠀⠀⠈⠉⠙⣿⠿⢿⢿⠍⠉⠀⠀⠀⠀⠉⣻⡯⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀    ");
+                System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⠲⠤⣀⣀⡀⠀⠈⣽⡟⣼⠀⣀⣀⣠⠤⠒⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀    ");
+                System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⢻⡏⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀      ");
+                System.out.println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀       ");
+                System.out.println("                     ??????????????????                        ");
+                System.out.println("                        ??? HP = " + entityHealth + "          ");
+                System.out.println("===============================================================");
+                System.out.println("You Feel a Divine Light Shine upon You!                        ");
+                System.out.println("");
+                System.out.println(name + "\'s HP = " + health2 );
+                System.out.println("");
+                System.out.println("===============================================================");
+                System.out.println("\t1. ???SMITE???");
+                System.out.println("\t2. Parry");
+                System.out.println("\t3. Recover");
+                
+                String response = in.nextLine();
+                if (response.equals("1")) 
+                {
+                    System.out.println("\033[H\033[2J");
+                    System.out.println("You are filled with radiance");
+                    sleep(2000);
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    System.out.println("9999999999999999999999999999999999999999999999999999999999999999");
+                    sleep(100);
+                    System.out.println("\033[H\033[2J");
+                    if (entityHealth == 666)
+                    {
+                        entityHealth = 66;
+                        health2 = 1;
+                    }
+                    else if (entityHealth == 66)
+                    {
+                        entityHealth = 6;
+                        health2 = 0.1;
+                    }
+                    else if (entityHealth == 6)
+                    {
+                        entityHealth = 0.6;
+                        health2 = 0.0000000001;
+                    }
+                    else if (entityHealth == 0.6)
+                    {
+                        entityHealth = 0;
+                        entity = false;
+                    }
+                }
+                else 
+                {
+                    System.out.println("\033[H\033[2J");
+                    System.out.println("The entity is far too powerful to succomb to that");
+                    sleep(2000);
+                }
+            }
+            System.out.println("\033[H\033[2J");
+            System.out.println(" You have slain evil ");
+            sleep(2000);
+            System.out.println("\033[H\033[2J");
+            System.out.println(" For now ");
+            sleep(2000);
+            System.out.println("\033[H\033[2J");
+            System.out.println("CONGRATULATIONS ON BEATING THE GAME!!!");
+            System.out.println("I HOPE YOU ENJOYED PLAYING!!! ");
+        }
+///////////////////////////////     GAME END    /////////////////////////////////////////////
+    }
+}
